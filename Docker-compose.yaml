@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db1:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: your_username
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: your_database_name
+      POSTGRES_PORT: 5432
+      POSTGRES_REPLICATION_MODE: master
+      POSTGRES_REPLICATION_USER: repl_user
+      POSTGRES_REPLICATION_PASSWORD: repl_password
+    networks:
+      - postgres-network
+    volumes:
+      - ./pgdata1:/var/lib/postgresql/data
+
+  db2:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: your_username
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: your_database_name
+      POSTGRES_PORT: 5432
+      POSTGRES_REPLICATION_MODE: slave
+      POSTGRES_MASTER_SERVICE_NAME: db1
+      POSTGRES_REPLICATION_USER: repl_user
+      POSTGRES_REPLICATION_PASSWORD: repl_password
+    networks:
+      - postgres-network
+    volumes:
+      - ./pgdata2:/var/lib/postgresql/data
+
+  db3:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: your_username
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: your_database_name
+      POSTGRES_PORT: 5432
+      POSTGRES_REPLICATION_MODE: slave
+      POSTGRES_MASTER_SERVICE_NAME: db1
+      POSTGRES_REPLICATION_USER: repl_user
+      POSTGRES_REPLICATION_PASSWORD: repl_password
+    networks:
+      - postgres-network
+    volumes:
+      - ./pgdata3:/var/lib/postgresql/data
+
+networks:
+  postgres-network:
+    name: postgres-network
